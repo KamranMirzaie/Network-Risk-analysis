@@ -1,0 +1,666 @@
+################################ -----Start of:     ***Animal Mobility Stady 1*** $$$$$$$$$$$$$$$$$$$$$$$$$
+#Origin of commands = Lecture1.R of (IRAN) Network analysis
+rm(list=ls())#Ù¾Ø§Ú© Ú©Ø±Ø¯Ù ÙØ­ÛØ· Ù ÙØªØ§ÛØ¬ ÙØ¨ÙÛ  - Ù¾Ø§Ú© Ú©Ø±Ø¯Ù Ú©ÙÛÙ ÙØªØºÛØ±ÙØ§Û ÙØ¨ÙÛ
+
+setwd("D:\\Tasks\\1 Admin Assess\\1 Related files\\10 Projects\\5 IVO Projects\\Animal Mobility Study\\Data 4 Network Analysis\\0 R Terminal")
+#setwd("E:\\1 ScientificAssisstants\\15 E-Learnings\\4 CIRAD\\R Bank")
+setwd("F:\\Admin Assess\\1 Related files\\0 Mozhgan & Baran My Loves\\10 Projects\\5 IVO Projects\\Animal Mobility Study\\Data 4 Network Analysis\\0 R Terminal")
+################
+# Import data
+# data are imported form a csv file and stored in a dataframe  named network1
+############
+animmob<-read.csv2("All-Imput R.csv")
+animmobFX<-aggregate(animmob$HEADCOUNT, by = animmob[, 1:6], FUN = sum)
+write.csv(animmobFX,"All-Imput Aggregated1.csv",row.names=FALSE,fileEncoding = "UTF-8")
+####
+############Ø¢ÙØ§Ø¯Ù Ø³Ø§Ø²Û ÙØ§ÛÙ ÙØ§Û Ø¬Ø§Ø¨Ø¬Ø§ÛÛ ÙØ±Ø¨ÙØ· Ø¨Ù ÙØ± ÙÙØ¹ Ø¯Ø§Ù Ø¨ØµÙØ±Øª Ø¬Ø¯Ø§Ú¯Ø§ÙÙ Ø¨Ø±Ø§Û MAPMCDA
+animmob<-read.csv2("Camel-Imput R.csv")
+animmobFX<-aggregate(animmob$HEADCOUNT, by = animmob[, 1:6], FUN = sum)
+write.csv(animmobFX,"Camel-Imput Aggregated1.csv",row.names=FALSE,fileEncoding = "UTF-8")
+####
+animmob<-read.csv2("Cattle-Imput R.csv")
+animmobFX<-aggregate(animmob$HEADCOUNT, by = animmob[, 1:6], FUN = sum)
+write.csv(animmobFX,"Cattle-Imput Aggregated1.csv",row.names=FALSE,fileEncoding = "UTF-8")
+####
+animmob<-read.csv2("Other-Imput R.csv")
+animmobFX<-aggregate(animmob$HEADCOUNT, by = animmob[, 1:6], FUN = sum)
+write.csv(animmobFX,"Other-Imput Aggregated1.csv",row.names=FALSE,fileEncoding = "UTF-8")
+####
+animmob<-read.csv2("Bufalo-Imput R.csv")
+animmobFX<-aggregate(animmob$HEADCOUNT, by = animmob[, 1:6], FUN = sum)
+write.csv(animmobFX,"Bufalo-Imput Aggregated1.csv",row.names=FALSE,fileEncoding = "UTF-8")
+####
+animmob<-read.csv2("Sheep-Imput R.csv")
+animmobFX<-aggregate(animmob$HEADCOUNT, by = animmob[, 1:6], FUN = sum)
+write.csv(animmobFX,"Sheep-Imput Aggregated1.csv",row.names=FALSE,fileEncoding = "UTF-8")
+#### Ø¢ÙØ§ÙÛØ² Ø´Ø¨Ú©Ù Ø¨Ø±Ø§Û ØªÙØ§ÙÛ Ø§ÙÙØ§Ø¹ Ø¯Ø§Ù ÙØ§
+####Check the right format of the columns
+###
+network1<-read.csv2("IRAN - ANIMAL_MOBILITY_Study1Aggregated2.csv")
+network1$ORIGIN_NAME<-as.character(network1$ORIGIN_NAME) 
+network1$DESTINATION_NAME<-as.character(network1$DESTINATION_NAME)
+
+library("igraph")
+
+g1<-graph_from_data_frame(network1)
+
+###############
+# Counts the number of nodes 
+# and their names
+################
+
+vcount(g1) # Ø§Ø±Ø§Ø¦Ù ØªØ¹Ø¯Ø§Ø¯ Ú©Ù ÙÙØ¯ÙØ§
+V(g1) # Ø§Ø±Ø§Ø¦Ù ÙÛØ³Øª Ú©Ù ÙÙØ¯ÙØ§
+
+#Node_df <- data.frame(Nodes)
+#write.csv2(Nodes, file = "Nodes.csv")#Ø°Ø®ÛØ±Ù Ø¯ÛØªØ§ ÙØ±ÛÙ Ø¯Ø± ÛÚ© ÙØ§ÛÙ CSV
+
+###############
+# Counts the number of links
+# and their names
+################
+
+ecount(g1) # Ø§Ø±Ø§Ø¦Ù ØªØ¹Ø¯Ø§Ø¯ Ú©Ù ÙÛÙÚ© ÙØ§
+E(g1) # Ø§Ø±Ø§Ø¦Ù ÙÛØ³Øª Ú©Ù ÙÛÙÚ© ÙØ§
+
+#############
+# Visualize the network
+#Edge.width and edge.arrow.size are added to improve plot
+############
+
+plot(g1,edge.width=0.5,edge.arrow.size=0.15)
+
+############################### Adding weight to the respective link
+##########################################################################
+##########################################################################
+############### Network visualization with R : Start (Test)
+
+###################### Andrea s instruction: start
+net<-graph_from_data_frame(network1,directed=TRUE)
+E(net)$weight<-network1[,3]
+strength_df<-strength(net,mode="in")
+plot(net, vertex.size=strength_df/40)
+
+l<-layout_with_kk(net)
+plot(net, vertex.size=strength_df/40,layout=l, vertex.color="blue")
+###################### Andrea s instruction: End
+#Color
+# Generate colors based on media type:
+pal1 <- heat.colors(5, alpha=1) # 5 colors from the heat palette, opaque
+pal2 <- rainbow(5, alpha=.5) # 5 colors from the heat palette, transparent
+#plot(x=1:10, y=1:10, pch=19, cex=5, col=pal1)
+#plot(x=1:10, y=1:10, pch=19, cex=5, col=pal2)
+
+plot(net, vertex.size=strength_df/40, edge.arrow.size=.2, edge.color="orange", vertex.label.color="black"
+     , edge.label.size=2, vertex.color=pal2)
+
+#######################
+######### Network visualization with R : End (Our Data)
+#########################################################################
+#########################################################################
+#################################
+E(g1)$weight <- network1$HEADCOUNT
+plot(g1,edge.width=E(g1)$weight/7000, edge.arrow.size=0.15)
+
+##############
+# Crreated a weighted Network
+# Associate to each link its  weight
+#This corresponds to the value in the third column (weight of the dataframe)
+#################
+#E(g1)$HEADCOUNT<-network1$HEADCOUNT
+#############
+# Visualize the weighted network with 
+# varying the thickness of the link based on its weight
+############
+#plot(g1,edge.width=E(g1)$weight/10,edge.arrow.size=0.15)
+#############################@ 
+
+########################
+#
+# Estimating network measures
+#
+#############################
+#############################
+
+#####################
+# degree
+# Count the number of connections of a node
+# Use the option v="node name" if we want information f ora specific node
+#
+# Use mode="all" as option in the function if we are not interested in the direction of the link
+# Use mode="in" as option in the function for incoming connection
+# Use mode="out" as option in the function for outgoing connection
+#
+##################@
+City1 <- "Tehran"    # Ø´ÙØ± ÙÙØµØ¯ 
+
+degree(g1,v=City1,mode="all") # degree for a specific node ØªÙØ±Ø§Ù ÚÙØ¯ ÙÛÙÚ© Ø¯Ø§Ø±Ø¯Ø
+degree(g1,v=City1,mode="in") # ØªÙØ±Ø§Ù ÚÙØ¯ ÙØ­ÙÙÙÙ ÙØ±ÙØ¯Û Ø¯Ø§Ø±Ø¯Ø
+degree(g1,v=City1,mode="out") # ØªÙØ±Ø§Ù ÚÙØ¯ ÙØ­ÙÙÙÙ Ø®Ø±ÙØ¬Û Ø¯Ø§Ø±Ø¯Ø
+
+degree(g1,mode="in") # degree of all nodes ÙÛØ³Øª ÙØ­ÙÙÙÙ ÙØ§Û ÙØ±ÙØ¯Û
+degree(g1,mode="out") # degree of all nodes ÙÛØ³Øª ÙØ­ÙÙÙÙ ÙØ§Û Ø®Ø±ÙØ¬Û
+
+sort(degree(g1, mode="all") ) # ÙÛØ³Øª Ú©Ù ÙØ­ÙÙÙÙ ÙØ§Û ÙØ±ÙØ¯Û/Ø®Ø±ÙØ¬Û
+##########
+#Plotting the degree distribution
+###############
+hist(degree(g1,mode="all"),breaks=seq(0,max(degree(g1)),1),xlab="degree",main="My Network")
+#####################
+# Strength
+# Count the sum of weights
+# Use the option v="node name" if we want information for a specific node
+#
+# Use mode="all" as option in the function if we are not interested in the direction of the link
+# Use mode="in" as option in the function for incoming connection
+# Use mode="out" as option in the function for outgoing connection
+#
+##################@
+strength(g1,v=City1,mode="all") # degree for a specific node ÙØ¬ÙÙØ¹ Ø­Ø¬Ù ÙÛÙÚ© ÙØ§Û ÛÚ© ÙÙØ¯ Ø±Ø§ ÙØ´Ø®Øµ ÙÛ Ú©ÙØ¯
+strength(g1,mode="in") # degree of all nodes
+strength(g1,mode="out")
+
+# Clustering Coefficient
+# option mode="local" if we want information at nodel level
+# option mode="global" for the average clustering coeff
+# Use v=" .." if we want info for a specific node
+##################
+transitivity(g1,v=City1, type=c("local")) # Ø¯Ø± Ø¨ÛÙ Ú©Ù Ø§Ø³ØªØ§Ù ÙØ§Û Ú©Ø´ÙØ±Ø ÚÙ ÙØ³Ø¨ØªÛ Ø§Ø² ÙÛÙÚ© ÙØ§Û ÙÙÚ©Ù Ø¨ÛÙ ØªÙØ±Ø§Ù Ù Ø³Ø§ÛØ± Ø§Ø³ØªØ§Ù ÙØ§ ÙØ¬ÙØ¯ Ø¯Ø§Ø±Ø¯Ø
+transitivity(g1, type=c("local")) # Ø¯Ø± Ø¨ÛÙ ÙÙØ³Ø§ÛÚ¯Ø§Ù ÙØ± Ø§Ø³ØªØ§Ù ÚÙ ÙØ³Ø¨ØªÛ Ø§Ø² ÙÛÙÚ© ÙØ§Û ÙÙÚ©Ù ÙØ¬ÙØ¯ Ø¯Ø§Ø±Ø¯Ø
+transitivity(g1, type=c("global")) 
+
+#################
+#Betweenness
+# Use the option v="node name" if we want information for a specific node
+#
+# Use mode="all" as option in the function if we are not interested in the direction of the link
+# Use mode="in" as option in the function for incoming connection
+# Use mode="out" as option in the function for outgoing connection
+#####################################
+betweenness(g1,v=City1, directed=TRUE) #ØªØ¹Ø¯Ø§Ø¯ ÙØ³ÛØ±ÙØ§ÛÛ Ú©Ù Ø§Ø² ØªÙØ±Ø§Ù ÙÛ Ú¯Ø°Ø±ÙØ¯
+betweenness(g1, directed=TRUE)
+betweenness(g1)
+#################
+#Closeness
+# Use the option v="node name" if we want information for a specific node
+#
+# Use mode="all" as option in the function if we are not interested in the direction of the link
+# Use mode="in" as option in the function for incoming connection
+# Use mode="out" as option in the function for outgoing connection
+#####################################
+closeness(g1,v=City1, mode="all") #ÙØ§ØµÙÙ ØªÙØ±Ø§Ù Ø§Ø² Ø³Ø§ÛØ± Ø§Ø³ØªØ§Ù ÙØ§
+closeness(g1, mode="all")
+
+########################
+#########################
+# Global measure
+#
+########################
+
+
+#################
+#Density
+# Option loos=FALSE if we are excluding  link wit h same origin and destination
+#####################################
+edge_density(g1) #ÙØ³Ø¨Øª ØªØ¹Ø¯Ø§Ø¯ ÙÛÙÚ© ÙØ§Û ÙÙØ¬ÙØ¯ Ø¨Ù ØªØ¹Ø¯Ø§Ø¯ ÙÛÙÚ© ÙØ§Û ÙÙÚ©Ù Ø¯Ø± Ø´Ø¨Ú©Ù 
+edge_density(g1, loops = FALSE)
+edge_density(g1, loops = TRUE)
+
+#################
+#Diameter and mean_distance
+###############
+diameter(g1,weight=NA) #Ø¨ÙÙØ¯ØªØ±ÛÙ ÙØ³ÛØ± Ø¨ÛÙ Ø¯Ù Ø§Ø³ØªØ§Ù ÙØ®ØªÙÙ Ø¯Ø± Ø§ÛÙ Ø´Ø¨Ú©Ù ÚÙØ¯Ø± Ø§Ø³ØªØ 
+mean_distance(g1) #ÙÛØ§ÙÚ¯ÛÙ Ø·ÙÙ ÙØ³ÛØ± Ø¨ÛÙ Ø¯Ù Ø§Ø³ØªØ§Ù ÙØ®ØªÙÙ Ø¯Ø± Ø§ÛÙ Ø´Ø¨Ú©Ù ÚÙØ¯Ø± Ø§Ø³ØªØ 
+############
+is.connected(g1) #Ø¢ÛØ§ ÙÙÙ Ø§Ø³ØªØ§Ù ÙØ§Ø§Ø² Ø·Ø±ÛÙ ÛÚ© ÙØ³ÛØ± Ø¨Ø§ ÙÙ Ø¯Ø± Ø§Ø±ØªØ¨Ø§Ø· ÙØ³ØªÙØ¯Ø 
+components(g1)
+# $membership
+components(g1, mode="strong") #ÙÙØ§ÛØ´ ÙÙØ¯ÙØ§Û ÙÙÛ. ÙÙØ¯Û ÙÙÛØ³Øª Ú©Ù Ø¯Ø± Ø±Ø§Ø³ØªØ§Û ÙÛÙÚ© ÙÙØ¬ÙØ¯Ø Ø¨ØªÙØ§Ù Ø§Ø² Ø¨Ú© ÙÙØ¯ Ø¨Ù ÙÙØ¯ÙØ§Û Ø¯ÛÚ¯Ø± Ø­Ø±Ú©Øª Ú©Ø±Ø¯
+
+#Using Source Script: Network_Analysis_Day3.R of data cleaning Ø¢ÙØ§ÙÛØ² Ø´Ø¨Ú©Ù Ø¨Ø±Ø§Û Ú©Ù ÙÙÙ Ù Ø§ÙØªÙØ§ÙØ§Øª
+library("igraph")# network analysis and visualization
+library("ggplot2") # plot reults
+library("plotly") # interactive plots
+#my_country <- "TEHRAN"    # Enter the name of your country in quotation marks, 
+#in capital letters and without accent.
+# Crossborder flows
+#Relations_Intro <- network1[network1$DESTINATION_NAME == my_country & network1$ORIGIN_NAME != my_country,]#Ø§ÛÙ Ø¯Ø³ØªÙØ±Ø ÙØ± Ø±Ø¯ÛÙÛ Ø±Ø§ Ú©Ù Ú©Ø´ÙØ± ÙÙØ§ØµØ¯ Ø¢Ù ØªÙÙØ³ Ø¨Ø§Ø´Ø¯ Ù Ú©Ø´ÙØ± ÙØ¨Ø¯Ø£ Ø¢Ù ÙØ± Ú©Ø´ÙØ±Û ØºÛØ± Ø§Ø² ØªÙÙØ³ Ø¨Ø§Ø´Ø¯ Ø±Ø§ Ø¯Ø± ÙØªØºÛØ± Ø¬Ø¯ÛØ¯ ÙØ§Ø±Ø¯ ÙÛ Ú©ÙØ¯
+
+# National flows
+#Relations_Expo <- network1[network1$DESTINATION_NAME == my_country & network1$ORIGIN_NAME == my_country,]# Ø§ÛÙ Ø¯Ø³ØªÙØ±Ø ÙØ± Ø±Ø¯ÛÙÛ Ø±Ø§ Ú©Ù Ú©Ø´ÙØ± ÙÙØµØ¯ Ø¢Ù ØªÙÙØ³ Ø¨ÙØ¯Ù Ù Ú©Ø´ÙØ± ÙØ¨Ø¯Ø£ Ø¢Ù ÙÙ ØªÙÙØ³ Ø¨Ø§Ø´Ø¯Ø Ø¯Ø± ÙØªØºÛØ± Ø¬Ø¯ÛØ¯ ÙØ§Ø±Ø¯ ÙÛ Ú©ÙØ¯
+
+############
+## Saving file for MapMCDA
+######
+
+#RelationsMapMCDA<-Relations_Expo[,c("ORIGIN_NAME","DESTINATION_NAME","ORIGIN_LONGITUDE_X","ORIGIN_LATITUDE_Y", "DESTINATION_LONGITUDE_X","DESTINATION_LATITUDE_Y","HEADCOUNT")]#Ø³Ø§Ø®Øª ÙØªØºÛØ± Ø¬Ø¯ÛØ¯ Ù Ø±ÛØ®ØªÙ ÙÙÙ Ø±Ø¯ÛÙ ÙØ§ Ù ÙÙØ· Ø¨Ø±Ø®Û Ø§Ø² Ø³ØªÙÙ ÙØ§ Ú©Ù ÙØ§Ù Ø¢ÙÙØ§ Ø¯Ø± Ø¯Ø³ØªÙØ± ÙØ¬ÙØ¯ Ø¯Ø§Ø±Ø¯
+#names(RelationsMapMCDA)<-c("origin","destination","long_org","lat_org","long_dest","lat_dest","volume")# ØªØ¹ÙÛØ¶ ÙØ§Ù Ø³ØªÙÙÙØ§ Ø¯Ø± ÙØ§ÛÙ Ø¬Ø¯ÛØ¯
+
+#write.csv(RelationsMapMCDA,"mobility_network_expo.csv",row.names=FALSE,fileEncoding = "UTF-8")
+##################
+# We save the locations concerned 
+#
+#####################
+Origins <- network1[,c("ORIGIN_NAME", "ORIGIN_LONGITUDE_X", "ORIGIN_LATITUDE_Y")]#Ø±ÛØ®ØªÙ Ø³ØªÙÙ ÙØ§Û ÙØ±Ø¨ÙØ· Ø¨Ù Ø§Ø·ÙØ§Ø¹Ø§Øª ÙØ¨Ø¯Ø£ Ø¯Ø± ÛÚ© ÙØªØºÛØ±
+Destinations <- network1[,c("DESTINATION_NAME", "DESTINATION_LONGITUDE_X", "DESTINATION_LATITUDE_Y")]#Ø±ÛØ®ØªÙ Ø³ØªÙÙ ÙØ§Û ÙØ±Ø¨ÙØ· Ø¨Ù Ø§Ø·ÙØ§Ø¹Ø§Øª ÙÙØµØ¯ Ø¯Ø± ÛÚ© ÙØªØºÛØ±
+names(Origins) <- names(Destinations) <- c("NAME","LONGITUDE", "LATITUDE")#ØªØ¹ÙÛØ¶ ÙØ§Ù Ø³ØªÙÙ ÙØ§Û Ø¯Ù ÙØªØºÛØ± Ø¨ØµÙØ±Øª ÛÚ©Ø¬Ø§
+Origins$NAME <- as.character(Origins$NAME)
+#Origins$COUNTRY <- as.character(Origins$COUNTRY)
+Destinations$NAME <- as.character(Destinations$NAME)
+#Destinations$COUNTRY <- as.character(Destinations$COUNTRY)
+
+Locations <- unique(rbind(Origins, Destinations))#Ø´Ø±ÙØ¹ Ø³Ø§Ø®Øª Ø´Ø¨Ú©Ù
+NAME_Locations <- unique(Locations$NAME)
+
+names(network1)[names(network1) == "HEADCOUNT"] <- "weight"#ØªØ¹ÙÛØ¶ ÙØ§Ù Ø³ØªÙÙ ØªØ¹Ø¯Ø§Ø¯ Ø¨Ù ÙØ²Ù
+#names(Relations_Intro)[names(Relations_Intro) == "HEADCOUNT"] <- "weight"#ØªØ¹ÙÛØ¶ ÙØ§Ù Ø³ØªÙÙ ØªØ¹Ø¯Ø§Ø¯ Ø¨Ù ÙØ²Ù
+#names(Relations_Expo)[names(Relations_Expo) == "HEADCOUNT"] <- "weight"#ØªØ¹ÙÛØ¶ ÙØ§Ù Ø³ØªÙÙ ØªØ¹Ø¯Ø§Ø¯ Ø¨Ù ÙØ²Ù
+
+Network  <- graph_from_data_frame(network1[,c("ORIGIN_NAME","DESTINATION_NAME","weight")]
+                                  , vertices=NAME_Locations, directed=TRUE) # Format Data for igraph
+is_weighted(Network)
+#Network_Intro     <- graph_from_data_frame(Relations_Intro[,c("ORIGIN_NAME","DESTINATION_NAME","weight")], vertices=NAME_Locations, directed=TRUE) # Format Data for igraph
+#is_weighted(Network_Intro)
+#Network_Expo      <- graph_from_data_frame(Relations_Expo[,c("ORIGIN_NAME","DESTINATION_NAME","weight")], vertices=NAME_Locations, directed=TRUE) # Format Data for igraph
+#is_weighted(Network_Expo)#Ù¾Ø§ÛØ§Ù Ø³Ø§Ø®Øª Ø´Ø¨Ú©Ù
+
+##  Some plots  ##
+plot(Network,edge.width=0.2,edge.arrow.size=0.1,vertex.lable.cex=0.6)
+#plot(Network_Expo, vertex.size=6,vertex.label=NA,  layout=layout_in_circle,edge.width=0.2,edge.arrow.size=0.1)
+l <- layout_on_sphere(Network)
+#plot(Network_Intro, vertex.size=6, vertex.label=NA,layout=l,edge.width=0.4,edge.arrow.size=0.1)
+
+
+#######################################################
+#######################################################
+#######################################################
+
+
+
+#########################################################################
+#######         Introduction : crossborder mobility               #######
+#########################################################################
+
+################################
+##        STRENGTH           ##
+################################
+
+#### strength:  volume of animals excahnaged ####
+####                  Higher is the degree >> more the locality is connected                 ####
+
+str <-strength(Network,mode="all") #Ø´Ø±ÙØ¹ Ø³Ø§Ø®Øª ÙÙÙØ¯Ø§Ø± Ù¾Ø±Ø§Ú©ÙØ¯Ú¯Û Ø¨Ø±Ø§Û ÙÙÙ Ù Ø§ÙØªÙØ§ÙØ§Øª Ú©ÙÛ
+
+######
+# We plot network and we scale the node size depending on the strength value
+#########
+plot(Network, vertex.size=10*str/max(str),vertex.label=NA,layout=l,edge.width=0.4,edge.arrow.size=0.1)
+
+######
+# Strength distribution
+#########
+
+hist(str, main="Histogram of the strength values of the national mobility network")
+
+#### In-weight: Number of animal movements TO a location #### 
+inweight <-   strength(Network, mode="in")
+
+hist(inweight, main="Histogram of In-Coming Volume Values of the International Mobility Network")
+
+#### Out-strength: Number of animal movements FROM a location ####
+
+outweight <-   strength(Network, mode="out")
+
+hist(outweight, main="Histogram of Out-Weight Values of the International Mobility Network")
+
+################################
+##         BETWEENNESS         ##
+################################
+
+# The betweenness highlights the localities through which the most animals / products at risk pass,
+# it highlights the "bridge" areas through which the animals pass most often.
+# The more animals paths  pass through the locality, the higher the betweenness.
+
+betw <- betweenness(Network, directed=F)
+
+edge_betweenness(Network, directed=T)
+# Function to gather the different degrees and the betweeness in a single table
+#ØªØ¹Ø±ÛÙ ÛÚ© ÙØ§ÙÚ©Ø´Ù - ØªØ¹Ø±ÛÙ ÛÚ© Ø­ÙÙÙ
+MyMerge         <- function(x, y){
+  df            <- merge(x, y, by= "row.names", all.x= F, all.y= F)
+  rownames(df)  <- df$Row.names
+  df$Row.names  <- NULL
+  return(df)
+}
+
+sna             <- Reduce(MyMerge, list(str, inweight, outweight, betw))
+
+names(sna)      <- as.factor(c("weight", "inweight", "outweight", "betweenness"))
+sna             <- data.frame(sna)
+
+# Add GPS coordinates
+sna$NAME <- row.names(sna)#Ø§ÛØ¬Ø§Ø¯ ÛÚ© ÙØªØºÛØ± Ø¬Ø¯ÛØ¯ Ø­Ø§ÙÛ ÙØ§Ù ÙØ± Ø±Ø¯ÛÙ
+example <- sna#ÙØ«Ø§Ù Ú©Ø§Ø± Ø¨Ø§ Ø±Ø¯ÛÙ ÙØ§
+row.names(example) <- example$NAME#ÙØ«Ø§Ù Ú©Ø§Ø± Ø¨Ø§ Ø±Ø¯ÛÙ ÙØ§
+sna <- merge(sna, Locations, by='NAME')#Ø§Ø¶Ø§ÙÙ Ú©Ø±Ø¯Ù ÙØªØºÛØ±ÙØ§Û ÙØ§ÛÙ ÙÙÚ©ÛØ´ÙØ² Ø¨Ù ÙØ§ÛÙ Ø§Ø³ Ø§Ù Ø§Û Ø¨Ø± Ø§Ø³Ø§Ø³ ÙØªØºÛØ± ÙØ§Ù
+
+library(plotly)
+# Plots
+ggplotly(
+  ggplot(sna, aes(inweight, outweight,label=NAME)) +
+    geom_point(aes(size = betweenness)) +
+    xlab("In-weight") +
+    ylab("Out-weight") +
+    scale_size_continuous(name = "Betweenness") +
+    ggtitle("Localities of the national mobility network towards Tehran represented \n according to their In-weight and Out-weight") +
+    theme(plot.title = element_text(hjust = 0.5)))
+
+ggplotly( #ÙÙÙØ¯Ø§Ø± Ù¾Ø±Ø§Ú©ÙØ¯Ú¯Û Ø¨Ø§ Ø¯Ø±Ø¬ ÙØ§Ù ÙÙØ§Ø· Ø¯Ø± ÙÙÙØ¯Ø§Ø± 
+  ggplot(sna, aes(inweight, outweight,label=NAME)) +
+    geom_point(aes(size = betweenness)) +
+    geom_text(vjust=-1,size=3, angle = 45) +
+    xlab("In-weight") +
+    ylab("Out-weight") +
+    scale_size_continuous(name = "Betweenness") +
+    ggtitle("Localities of the national mobility network represented \n according to their In-weight and Out-weight")+
+    theme(plot.title = element_text(hjust = 0.5)))
+
+
+# Ø¢ÙØ§ÙÛØ² Ø´Ø¨Ú©Ù Ø§ÙÙØ§Ø¹ Ø¯Ø§Ù Ø¨Ø§ Ø§Ø­ØªØ³Ø§Ø¨ Ø§Ø³ØªØ§Ù ØªÙØ±Ø§Ù Ø¨Ù Ø¹ÙÙØ§Ù ÙÙØµØ¯
+#Using Source Script: Network_Analysis_Day3.R of data cleaning Ø¢ÙØ§ÙÛØ² Ø´Ø¨Ú©Ù Ø¨Ø±Ø§Û ÙÙØµØ¯ Ø®Ø§Øµ - ØªÙØ±Ø§Ù
+rm(list=ls())#Ù¾Ø§Ú© Ú©Ø±Ø¯Ù ÙØ­ÛØ· Ù ÙØªØ§ÛØ¬ ÙØ¨ÙÛ  - Ù¾Ø§Ú© Ú©Ø±Ø¯Ù Ú©ÙÛÙ ÙØªØºÛØ±ÙØ§Û ÙØ¨ÙÛ
+
+setwd("D:\\Tasks\\1 Admin Assess\\1 Related files\\10 Projects\\5 IVO Projects\\Animal Mobility Study\\Data 4 Network Analysis\\0 R Terminal")
+#setwd("E:\\1 ScientificAssisstants\\15 E-Learnings\\4 CIRAD\\R Bank")
+library("igraph")# network analysis and visualization
+library("ggplot2") # plot reults
+library("plotly") # interactive plots
+my_country <- "Tehran"    # Enter the name of your country in quotation marks, 
+
+network1<-read.csv2("IRAN - ANIMAL_MOBILITY_Study1 - 6 All Animals Aggregated2.csv")
+network1$ORIGIN_NAME<-as.character(network1$ORIGIN_NAME) 
+network1$DESTINATION_NAME<-as.character(network1$DESTINATION_NAME)
+#in capital letters and without accent.
+# Crossborder flows
+Relations_Intro <- network1[network1$DESTINATION_NAME == my_country & network1$ORIGIN_NAME != my_country,]#Ø§ÛÙ Ø¯Ø³ØªÙØ±Ø ÙØ± Ø±Ø¯ÛÙÛ Ø±Ø§ Ú©Ù Ú©Ø´ÙØ± ÙÙØ§ØµØ¯ Ø¢Ù ØªÙÙØ³ Ø¨Ø§Ø´Ø¯ Ù Ú©Ø´ÙØ± ÙØ¨Ø¯Ø£ Ø¢Ù ÙØ± Ú©Ø´ÙØ±Û ØºÛØ± Ø§Ø² ØªÙÙØ³ Ø¨Ø§Ø´Ø¯ Ø±Ø§ Ø¯Ø± ÙØªØºÛØ± Ø¬Ø¯ÛØ¯ ÙØ§Ø±Ø¯ ÙÛ Ú©ÙØ¯
+
+# National flows
+Relations_Expo <- network1[network1$DESTINATION_NAME == my_country & network1$ORIGIN_NAME == my_country,]# Ø§ÛÙ Ø¯Ø³ØªÙØ±Ø ÙØ± Ø±Ø¯ÛÙÛ Ø±Ø§ Ú©Ù Ú©Ø´ÙØ± ÙÙØµØ¯ Ø¢Ù ØªÙÙØ³ Ø¨ÙØ¯Ù Ù Ú©Ø´ÙØ± ÙØ¨Ø¯Ø£ Ø¢Ù ÙÙ ØªÙÙØ³ Ø¨Ø§Ø´Ø¯Ø Ø¯Ø± ÙØªØºÛØ± Ø¬Ø¯ÛØ¯ ÙØ§Ø±Ø¯ ÙÛ Ú©ÙØ¯
+
+############
+
+# We save the locations concerned 
+#
+#####################
+Origins <- network1[,c("ORIGIN_NAME", "ORIGIN_LONGITUDE_X", "ORIGIN_LATITUDE_Y")]#Ø±ÛØ®ØªÙ Ø³ØªÙÙ ÙØ§Û ÙØ±Ø¨ÙØ· Ø¨Ù Ø§Ø·ÙØ§Ø¹Ø§Øª ÙØ¨Ø¯Ø£ Ø¯Ø± ÛÚ© ÙØªØºÛØ±
+Destinations <- network1[,c("DESTINATION_NAME", "DESTINATION_LONGITUDE_X", "DESTINATION_LATITUDE_Y")]#Ø±ÛØ®ØªÙ Ø³ØªÙÙ ÙØ§Û ÙØ±Ø¨ÙØ· Ø¨Ù Ø§Ø·ÙØ§Ø¹Ø§Øª ÙÙØµØ¯ Ø¯Ø± ÛÚ© ÙØªØºÛØ±
+names(Origins) <- names(Destinations) <- c("NAME","LONGITUDE", "LATITUDE")#ØªØ¹ÙÛØ¶ ÙØ§Ù Ø³ØªÙÙ ÙØ§Û Ø¯Ù ÙØªØºÛØ± Ø¨ØµÙØ±Øª ÛÚ©Ø¬Ø§
+Origins$NAME <- as.character(Origins$NAME)
+#Origins$COUNTRY <- as.character(Origins$COUNTRY)
+Destinations$NAME <- as.character(Destinations$NAME)
+#Destinations$COUNTRY <- as.character(Destinations$COUNTRY)
+
+Locations <- unique(rbind(Origins, Destinations))#Ø´Ø±ÙØ¹ Ø³Ø§Ø®Øª Ø´Ø¨Ú©Ù
+NAME_Locations <- unique(Locations$NAME)
+
+names(network1)[names(network1) == "HEADCOUNT"] <- "weight"#ØªØ¹ÙÛØ¶ ÙØ§Ù Ø³ØªÙÙ ØªØ¹Ø¯Ø§Ø¯ Ø¨Ù ÙØ²Ù
+names(Relations_Intro)[names(Relations_Intro) == "HEADCOUNT"] <- "weight"#ØªØ¹ÙÛØ¶ ÙØ§Ù Ø³ØªÙÙ ØªØ¹Ø¯Ø§Ø¯ Ø¨Ù ÙØ²Ù
+names(Relations_Expo)[names(Relations_Expo) == "HEADCOUNT"] <- "weight"#ØªØ¹ÙÛØ¶ ÙØ§Ù Ø³ØªÙÙ ØªØ¹Ø¯Ø§Ø¯ Ø¨Ù ÙØ²Ù
+
+Network  <- graph_from_data_frame(network1[,c("ORIGIN_NAME","DESTINATION_NAME","weight")]
+                                  , vertices=NAME_Locations, directed=TRUE) # Format Data for igraph
+is_weighted(Network)
+Network_Intro     <- graph_from_data_frame(Relations_Intro[,c("ORIGIN_NAME","DESTINATION_NAME","weight")], 
+                                           vertices=NAME_Locations, directed=TRUE) # Format Data for igraph
+is_weighted(Network_Intro)
+Network_Expo      <- graph_from_data_frame(Relations_Expo[,c("ORIGIN_NAME","DESTINATION_NAME","weight")],
+                                           vertices=NAME_Locations, directed=TRUE) # Format Data for igraph
+is_weighted(Network_Expo)#Ù¾Ø§ÛØ§Ù Ø³Ø§Ø®Øª Ø´Ø¨Ú©Ù
+
+##  Some plots  ##
+plot(Network,edge.width=0.2,edge.arrow.size=0.1,vertex.lable.cex=0.6)
+plot(Network_Expo, vertex.size=6,vertex.label=NA,  layout=layout_in_circle,edge.width=0.2,edge.arrow.size=0.1)
+l <- layout_on_sphere(Network)
+plot(Network_Intro, vertex.size=6, vertex.label=NA,layout=l,edge.width=0.4,edge.arrow.size=0.1)
+
+
+#######################################################
+#######################################################
+#######################################################
+
+
+
+#########################################################################
+#######         Introduction : crossborder mobility               #######
+#########################################################################
+
+################################
+##        STRENGTH           ##
+################################
+
+#### strength:  volume of animals excahnaged ####
+####                  Higher is the degree >> more the locality is connected                 ####
+
+str <-strength(Network_Intro,mode="all") #Ø´Ø±ÙØ¹ Ø³Ø§Ø®Øª ÙÙÙØ¯Ø§Ø± Ù¾Ø±Ø§Ú©ÙØ¯Ú¯Û Ø¨Ø±Ø§Û ÙÙÙ Ù Ø§ÙØªÙØ§ÙØ§Øª ÙØ±ÙØ¯Û Ø¨Ù ÙÙØµØ¯ ÙÙØªØ®Ø¨
+
+######
+# We plot network and we scale the node size depending on the strength value
+#########
+plot(Network_Intro, vertex.size=10*str/max(str),vertex.label=Network_Intro$NAME,layout=l,edge.width=0.4,edge.arrow.size=0.1)
+
+######
+# Strength distribution
+#########
+
+hist(str, main="Histogram of the strength values of the national mobility network")
+
+#### In-weight: Number of animal movements TO a location #### 
+inweight <-   strength(Network_Intro, mode="in")
+
+hist(inweight, main="Histogram of In-Coming Volume Values of the International Mobility Network")
+
+#### Out-strength: Number of animal movements FROM a location ####
+
+outweight <-   strength(Network_Intro, mode="out")
+
+hist(outweight, main="Histogram of Out-Weight Values of the International Mobility Network")
+
+################################
+##         BETWEENNESS         ##
+################################
+
+# The betweenness highlights the localities through which the most animals / products at risk pass,
+# it highlights the "bridge" areas through which the animals pass most often.
+# The more animals paths  pass through the locality, the higher the betweenness.
+
+betw <- betweenness(Network_Intro, directed=F)
+
+edge_betweenness(Network_Intro, directed=T)
+# Function to gather the different degrees and the betweeness in a single table
+#ØªØ¹Ø±ÛÙ ÛÚ© ÙØ§ÙÚ©Ø´Ù - ØªØ¹Ø±ÛÙ ÛÚ© Ø­ÙÙÙ
+MyMerge         <- function(x, y){
+  df            <- merge(x, y, by= "row.names", all.x= F, all.y= F)
+  rownames(df)  <- df$Row.names
+  df$Row.names  <- NULL
+  return(df)
+}
+
+sna             <- Reduce(MyMerge, list(str, inweight, outweight, betw))
+
+names(sna)      <- as.factor(c("weight", "inweight", "outweight", "betweenness"))
+sna             <- data.frame(sna)
+
+# Add GPS coordinates
+sna$NAME <- row.names(sna)#Ø§ÛØ¬Ø§Ø¯ ÛÚ© ÙØªØºÛØ± Ø¬Ø¯ÛØ¯ Ø­Ø§ÙÛ ÙØ§Ù ÙØ± Ø±Ø¯ÛÙ
+example <- sna#ÙØ«Ø§Ù Ú©Ø§Ø± Ø¨Ø§ Ø±Ø¯ÛÙ ÙØ§
+row.names(example) <- example$NAME#ÙØ«Ø§Ù Ú©Ø§Ø± Ø¨Ø§ Ø±Ø¯ÛÙ ÙØ§
+sna <- merge(sna, Locations, by='NAME')#Ø§Ø¶Ø§ÙÙ Ú©Ø±Ø¯Ù ÙØªØºÛØ±ÙØ§Û ÙØ§ÛÙ ÙÙÚ©ÛØ´ÙØ² Ø¨Ù ÙØ§ÛÙ Ø§Ø³ Ø§Ù Ø§Û Ø¨Ø± Ø§Ø³Ø§Ø³ ÙØªØºÛØ± ÙØ§Ù
+
+library(plotly)
+# Plots
+ggplotly(
+  ggplot(sna, aes(inweight, outweight,label=NAME)) +
+    geom_point(aes(size = betweenness)) +
+    xlab("In-weight") +
+    ylab("Out-weight") +
+    scale_size_continuous(name = "Betweenness") +
+    ggtitle("Localities of the national mobility network towards Tehran represented \n according to their In-weight and Out-weight") +
+    theme(plot.title = element_text(hjust = 0.5)))
+
+ggplotly( #ÙÙÙØ¯Ø§Ø± Ù¾Ø±Ø§Ú©ÙØ¯Ú¯Û Ø¨Ø§ Ø¯Ø±Ø¬ ÙØ§Ù ÙÙØ§Ø· Ø¯Ø± ÙÙÙØ¯Ø§Ø± 
+  ggplot(sna, aes(inweight, outweight,label=NAME)) +
+    geom_point(aes(size = betweenness)) +
+    geom_text(vjust=-1,size=3, angle = 45) +
+    xlab("In-weight") +
+    ylab("Out-weight") +
+    scale_size_continuous(name = "Betweenness") +
+    ggtitle("Localities of the international mobility network represented \n according to their In-weight and Out-weight")+
+    theme(plot.title = element_text(hjust = 0.5)))
+
+
+# The localities that appear to the right of the plot are those with the highest In-degree (higher risk of introduction)
+
+###########################################
+##         Save your results             ##
+###########################################
+
+
+# Keep only data related to your country
+sna <-sna[sna$COUNTRY == my_country,]
+
+# Save your file in csv format. The name of the file will be dated : sna_DATE.csv
+
+write.table(sna,file=paste0("sna_Intro_",Sys.Date( ),".csv"), sep = ",",  row.names = F)
+
+qtl_Intro <- data.frame(quantile(sna$weight),
+                        quantile(sna$inweight),
+                        quantile(sna$outweight),
+                        quantile(sna$betweenness))
+
+colnames(qtl_Intro) <- c("weight", "inweight", "outweight", "betweenness")
+write.table(qtl_Intro,file=paste0("qtl_Intro_",Sys.Date( ),".csv"), sep = ";",  row.names = T)
+
+#######################################################
+#######################################################
+#######################################################
+#######################################################
+
+###################################################
+#######   Exposure: national mobility       #######
+###################################################
+
+################################
+##         STRENGTH        ##
+################################
+
+#### Strength:  volume of animals exchanged ####
+####                  Higher is the degree >> more the locality is connected                 ####
+
+str <- strength(Network_Expo,mode="all") #Ø´Ø±ÙØ¹ Ø³Ø§Ø®Øª ÙÙÙØ¯Ø§Ø± Ù¾Ø±Ø§Ú©ÙØ¯Ú¯Û Ø¨Ø±Ø§Û ÙÙÙ Ù Ø§ÙØªÙØ§ÙØ§Øª Ø®Ø±ÙØ¬Û Ø¨Ù ÙÙØµØ¯ ÙÙØªØ®Ø¨
+
+plot(Network_Expo, vertex.size=10*str/max(str),vertex.label=NA,layout=l,edge.width=0.4,edge.arrow.size=0.1)
+
+
+hist(str, main="Histogram of node degree")
+
+#### In-weight : Number of animal movements TO a location ####
+
+inweight <- strength(Network_Expo, mode="in")
+
+hist(inweight,  main="Histogram of node in-weight")
+
+#### Outdegree : Number of animal movements FROM a location ####
+
+outweight <- strength(Network_Expo, mode="out")
+
+hist(outweight, main="Histogram of node out-weight")
+
+################################
+##         BETWEENNESS         ##
+################################
+
+# The betweenness highlights the localities through which the most animals / products at risk pass,
+# it highlights the "bridge" areas through which the animals pass most often.
+# The more animals paths pass through the locality, the higher the betweenness.
+
+betw <- betweenness(Network_Expo, directed=T, weights=NA)
+
+hist(betw, main="Histogram of the betweenness values of the national mobility network")
+
+p<-ggplot(as.data.frame(betw), aes(x=betw)) + 
+  geom_histogram(color="black", fill="white")
+p
+
+edge_betweenness(Network_Expo, directed=T, weights=NA)
+
+# Function to gather the different degrees and the betweeness in a single table
+
+MyMerge         <- function(x, y){
+  df            <- merge(x, y, by= "row.names", all.x= F, all.y= F)
+  rownames(df)  <- df$Row.names
+  df$Row.names  <- NULL
+  return(df)
+}
+
+sna             <- Reduce(MyMerge, list(str, inweight, outweight, betw))
+
+names(sna)      <- as.factor(c("weight", "inweight", "outweight", "betweenness"))
+sna             <- data.frame(sna)
+
+# Add GPS coordinates
+sna$NAME <- row.names(sna)
+sna <- merge(sna, Locations, by='NAME')
+
+# Plots
+
+
+ggplotly(
+  ggplot(sna, aes(inweight, outweight,label=NAME)) +
+    geom_point(aes(size = betweenness)) +
+    xlab("In-weight") +
+    ylab("Out-weight") +
+    scale_size_continuous(name = "Betweenness") +
+    ggtitle("Localities of the national mobility network represented according to \n their In-weight, their Out-degree and their Betweeness") +
+    theme(plot.title = element_text(hjust = 0.5)))
+
+outdegree <- strength(Network_Expo, mode="out")#Ø¨Ø±Ø§Û Ø±ÙØ¹ Ø§Ø´Ú©Ø§Ù Ù¾ÛØ´ Ø¢ÙØ¯Ù
+ggplotly(
+  ggplot(sna, aes(inweight, outdegree,label=NAME)) +
+    geom_point(aes(size = betweenness)) +
+    geom_text(vjust=-1,size=3, angle = 10) +
+    xlab("In-weight") +
+    ylab("Out-weight") +
+    scale_size_continuous(name = "Betweenness") +
+    ggtitle("Localities of the national mobility network represented according to \n their In-weight, their Out-weight and their Betweeness")+
+    theme(plot.title = element_text(hjust = 0.5)))
+
+# Keep only data related to your country
+sna <-sna[sna$COUNTRY == my_country,]
+
+###########################################
+##         Save your results             ##
+###########################################
+
+
+# Save your file in csv format. The name of the file will be dated : sna_DATE.csv
+
+write.table(sna,file=paste0("sna_Expo_",Sys.Date( ),".csv"), sep = ",",  row.names = F)
+
+qtl_Expo <- data.frame(quantile(sna$weight),
+                       quantile(sna$inweight),
+                       quantile(sna$outweight),
+                       quantile(sna$betweenness))
+
+colnames(qtl_Expo) <- c("weight", "inweight", "outweight", "betweenness")
+write.table(qtl_Expo,file=paste0("qtl_Expo_",Sys.Date( ),".csv"), sep = ";",  row.names = T,  col.names = T)
+
+#EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEnd Network_Analysis_Day3.R of data cleaning
+################################ -----End of:     ***Animal Mobility Stady 1***
+
+######################### Ø´Ø±ÙØ¹ Ú©Ø§Ø± Ø¨Ø§ mapMCDA
+#setwd("D:\\Science\\1 ScientificAssisstants\\15 E-Learnings\\4 CIRAD\\R Bank")
+#setwd("E:\\1 ScientificAssisstants\\15 E-Learnings\\4 CIRAD\\R Bank")
+#install.packages(mapMCDA)
+library(mapMCDA)
+mapMCDA_app()
+########################################## Risk Of Spread Ù¾Ø§ÛØ§Ù Ø±ÛØ³Ú© Ø§ÙØªØ´Ø§Ø± ÛØ§ ÙÙØ§Ø¬ÙÙ
+
